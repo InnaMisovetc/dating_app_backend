@@ -136,3 +136,12 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+***REMOVED***
+***REMOVED***
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+***REMOVED***
+***REMOVED***

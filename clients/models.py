@@ -56,6 +56,7 @@ class Client(AbstractUser):
     email = models.EmailField(unique=True)
     avatar = ProcessedImageField(upload_to='avatars', processors=[Watermark()])
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
+    liked = models.ManyToManyField('self', symmetrical=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
