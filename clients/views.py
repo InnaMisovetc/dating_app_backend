@@ -1,12 +1,14 @@
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django_filters import rest_framework as filters
 from rest_framework import status
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from dating_app_backend import settings
+from .filters import ClientFilter
 from .models import Client
 from .serializers import ClientSerializer
 
@@ -16,6 +18,14 @@ class ClientCreateView(CreateAPIView):
 
     queryset = get_user_model().objects.all()
     serializer_class = ClientSerializer
+
+
+class ClientsListView(ListAPIView):
+    permission_classes = [AllowAny]
+    queryset = Client.objects.all()
+    serializer_class = ClientSerializer
+    filter_backends = (filters.DjangoFilterBackend,)
+    filterset_class = ClientFilter
 
 
 class MatchView(APIView):
