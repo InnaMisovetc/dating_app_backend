@@ -21,11 +21,16 @@ class ClientCreateView(CreateAPIView):
 
 
 class ClientsListView(ListAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     queryset = Client.objects.all()
     serializer_class = ClientSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filterset_class = ClientFilter
+
+    def get_queryset(self):
+        distance = self.request.query_params.get('distance')
+        if distance:
+            Client.objects.get_users_within_distance(self.request.user.latitude, self.request.user.longitude, float(distance))
 
 
 class MatchView(APIView):
