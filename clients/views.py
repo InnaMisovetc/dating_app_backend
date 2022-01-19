@@ -57,7 +57,7 @@ class MatchView(APIView):
         send_mail(
             topic,
             f'{liked_client.first_name} liked you! Email of the participant {liked_client.email}!',
-            settings.,
+            settings.EMAIL_HOST_USER,
             [target_client.email],
             fail_silently=False,
         )
