@@ -40,6 +40,8 @@ class Client(AbstractUser):
     GENDER_CHOICES = [("M", "Male"), ("F", "Female"), ("O", "Others")]
 
     username = None
+    first_name = models.CharField(null=False, blank=False, max_length=150)
+    last_name = models.CharField(null=False, blank=False, max_length=150)
     email = models.EmailField(unique=True)
     avatar = models.ImageField(upload_to='avatars')
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
