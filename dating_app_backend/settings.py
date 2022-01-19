@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 
     'clients',
     'rest_framework',
-    'rest_framework_simplejwt'
+    'rest_framework_simplejwt',
+    'imagekit'
 ]
 
 MIDDLEWARE = [

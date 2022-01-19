@@ -1,6 +1,8 @@
+from PIL import ImageDraw
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from imagekit.models import ProcessedImageField
 
 
 class CustomUserManager(BaseUserManager):
@@ -36,6 +38,15 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
+class Watermark(object):
+    @staticmethod
+    def process(image):
+        draw = ImageDraw.Draw(image)
+        draw.line((0, 0) + image.size, fill=128)
+        draw.line((0, image.size[1], image.size[0], 0), fill=128)
+        return image
+
+
 class Client(AbstractUser):
     GENDER_CHOICES = [("M", "Male"), ("F", "Female"), ("O", "Others")]
 
@@ -43,7 +54,7 @@ class Client(AbstractUser):
     first_name = models.CharField(null=False, blank=False, max_length=150)
     last_name = models.CharField(null=False, blank=False, max_length=150)
     email = models.EmailField(unique=True)
-    avatar = models.ImageField(upload_to='avatars')
+    avatar = ProcessedImageField(upload_to='avatars', processors=[Watermark()])
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
 
     USERNAME_FIELD = 'email'
