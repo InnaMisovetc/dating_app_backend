@@ -29,11 +29,11 @@ class ClientsListView(ListAPIView):
     filterset_class = ClientFilter
 
     def get_queryset(self):
-        max_distance = float(self.request.query_params.get('distance'))
+        max_distance = self.request.query_params.get('distance')
         if max_distance is None:
             return Client.objects.all()
         else:
-            return self.get_clients_within_distance(max_distance)
+            return self.get_clients_within_distance(float(max_distance))
 
     def get_clients_within_distance(self, max_distance):
         origin_lat = self.request.user.latitude
