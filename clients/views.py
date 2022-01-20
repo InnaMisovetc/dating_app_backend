@@ -50,7 +50,7 @@ class ClientsListView(ListAPIView):
 class MatchView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, client_id):
+    def post(self, request, client_id):
         liked_client = Client.objects.get(id=client_id)
         current_client = request.user
 
