@@ -77,5 +77,5 @@ class Client(AbstractUser):
     longitude = models.DecimalField(max_digits=6, decimal_places=3)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = []
+    REQUIRED_FIELDS = ['latitude', 'longitude']
     objects = CustomUserManager()
