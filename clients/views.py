@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.core.mail import send_mail
+from django.db.models.expressions import RawSQL
 from django_filters import rest_framework as filters
 from rest_framework import status
 from rest_framework.generics import CreateAPIView, ListAPIView
@@ -28,9 +29,22 @@ class ClientsListView(ListAPIView):
     filterset_class = ClientFilter
 
     def get_queryset(self):
-        distance = self.request.query_params.get('distance')
-        if distance:
-            Client.objects.get_users_within_distance(self.request.user.latitude, self.request.user.longitude, float(distance))
+        max_distance = float(self.request.query_params.get('distance'))
+        if max_distance is None:
+            return Client.objects.all()
+        else:
+            return self.get_clients_within_distance(max_distance)
+
+    def get_clients_within_distance(self, max_distance):
+        origin_lat = self.request.user.latitude
+        origin_long = self.request.user.longitude
+        gcd = "6371 * acos(least(greatest(\
+        cos(radians(%s)) * cos(radians(latitude)) \
+        * cos(radians(longitude) - radians(%s)) + \
+        sin(radians(%s)) * sin(radians(latitude)) \
+        , -1), 1))"
+        distance_raw_sql = RawSQL(gcd, (origin_lat, origin_long, origin_lat))
+        return Client.objects.all().annotate(distance=distance_raw_sql).filter(distance__lt=max_distance)
 
 
 class MatchView(APIView):
