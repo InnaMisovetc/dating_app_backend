@@ -72,7 +72,6 @@ class Client(AbstractUser):
 @receiver(connection_created)
 def extend_sqlite(connection=None, **kwargs):
     if connection.vendor == "sqlite":
-        # sqlite doesn't natively support math functions, so add them
         cf = connection.connection.create_function
         cf('acos', 1, math.acos)
         cf('cos', 1, math.cos)
